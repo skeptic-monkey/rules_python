@@ -92,14 +92,18 @@ class WheelMaker(object):
 
     def add_file(self, package_filename, real_filename):
         """Add given file to the distribution."""
-
+        # This returns the filename to add into the archive
         def arcname_from(name):
-            # Always use unix path separators.
+            # First we normalize the filename with unix path
+            # separators
             normalized_arcname = name.replace(os.path.sep, '/')
+            # Then strip prefixes according
             for prefix in self._strip_path_prefixes:
                 if normalized_arcname.startswith(prefix):
                     return normalized_arcname[len(prefix):]
-
+            # Finally add a prefix if provided
+            # TODO(luc.bertrand): make it configurable, here hardcoded for e-scopics.
+            normalized_arcname = "ginger/" + normalized_arcname
             return normalized_arcname
 
         arcname = arcname_from(package_filename)
